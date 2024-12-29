@@ -36,7 +36,8 @@ export const FeedbackContextProvider = ({children}) => {
         setFeedback(feedbackArr)
     }
 
-    const deleteFeedback = (id) => {
+    const deleteFeedback = async (id) => {
+        await fetch(`/feedback/${id}`, {method: "DELETE"})
         let newArr = feedback.filter((item) => id !== item.id)
         setFeedback(newArr)
     }
@@ -45,9 +46,12 @@ export const FeedbackContextProvider = ({children}) => {
         setFeedbackEdit({item, edit: true})
     }
 
-    const updateFeedbackItem = (id, updatedItem) => {
+    const updateFeedbackItem = async (id, updatedItem) => {
+        const response = await fetch(`/feedback/${id}`, {method: "PUT", headers: {"Content-Type": "application/json"}, body: JSON.stringify(updatedItem)})
+        const data = await response.json()
+        
         setFeedback(
-            feedback.map((item) => item.id === id ? {...item, ...updatedItem} : item)
+            feedback.map((item) => item.id === id ? {...item, ...data} : item)
         )
     }
 
